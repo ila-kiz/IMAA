@@ -1,0 +1,121 @@
+#include <Adafruit_BMP085.h>
+#include <Wire.h>
+
+Adafruit_BMP085 sensor;
+
+struct Pin {
+    const int PIN;
+    bool benable;
+};
+
+struct LightSensor {
+    Pin ldr;
+    int light;
+    int dark;
+};
+
+struct MotionSensor {
+    Pin pir;
+    bool bmove;
+};
+
+Pin led = {9, false};
+Pin led2 = {8, true};
+LightSensor ldr = {{A0, true}, 0, 500};
+MotionSensor pir = {{A1, true}, false};
+
+const long SENSOR_PERIOD = 200;  
+const long LED_PERIOD = 100;     
+const int TEMP_THRESHOLD = 30;    
+
+long lastRead = 0;
+long lastLed = 0;
+bool ready = false;
+
+void setPin(Pin &p, bool state) {
+    digitalWrite(p.PIN, state ? HIGH : LOW);
+    p.benable = state;
+}
+
+void turnOn(Pin &p) {
+    setPin(p, true);
+}
+
+void turnOff(Pin &p) {
+    setPin(p, false);
+}
+
+float readTemperature() {
+    return sensor.readTemperature();
+}
+
+void readLightSensor() {
+    ldr.light = analogRead(ldr.ldr.PIN);
+}
+
+void readMotionSensor() {
+    pir.bmove = digitalRead(pir.pir.PIN) == HIGH;
+}
+
+bool isLightEnough() {
+    return ldr.light >= ldr.dark;
+}
+
+bool isMotionDetected() {
+    return pir.bmove;
+}
+
+void setup() {
+    Serial.begin(9600);
+    ready = sensor.begin();
+    if (!ready) {
+        Serial.println("TEMPERATURE SENSOR NOT FOUND");
+    }
+    pinMode(led.PIN, OUTPUT);
+    pinMode(led2.PIN, OUTPUT);
+}
+
+void updateLeds(float temperature) {
+    if (isLightEnough() && isMotionDetected()) {
+        turnOn(led);
+        checkTemperatureLed(temperature);
+    } else {
+        turnOff(led);
+        turnOff(led2);
+    }
+}
+
+void printTemperature(float temperature) {
+    Serial.print("t");
+    Serial.print("=");
+    Serial.println(temperature);
+}
+
+void printTemperaturePeriodically(float temperature) {
+    if (millis() - lastRead >= SENSOR_PERIOD) {
+        lastRead = millis();
+        printTemperature(temperature);
+    }
+}
+
+void checkTemperatureLed(float temperature) {
+    if (temperature > TEMP_THRESHOLD) {
+        turnOn(led2);
+        Serial.println("Temperature is exceeded");
+    } else {
+        turnOff(led2);
+    }
+}
+
+void loop() {
+    float temperature = readTemperature();
+    readLightSensor();
+    readMotionSensor();
+
+    if (millis() - lastLed >= LED_PERIOD) {
+        lastLed = millis();
+        updateLeds(temperature);
+    }
+
+    printTemperaturePeriodically(temperature);
+}
