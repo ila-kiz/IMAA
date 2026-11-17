@@ -1,0 +1,18 @@
+const int LED_PIN = 8;
+const int LIGHT_PIN = A0;
+const int LIMIT = 500;
+
+void setup() {
+    pinMode(LED_PIN, OUTPUT);
+    Serial.begin(9600);
+}
+
+void loop() {
+    int light = analogRead(LIGHT_PIN);
+    Serial.println(light);
+    if (light > LIMIT) {
+        digitalWrite(LED_PIN, HIGH);
+    } else {
+        digitalWrite(LED_PIN, LOW);
+    }
+}
