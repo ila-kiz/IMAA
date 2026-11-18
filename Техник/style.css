@@ -1,0 +1,32 @@
+body {
+background-color: #f0f0f0;
+font-family: Arial, sans-serif;
+max-width: 800px;
+margin: 20px auto;
+padding: 20px;
+}
+
+h1{
+color: darkblue;
+text-align: center
+}
+table, th, td{
+     border: 1px solid #333;
+     background-color: #cceeff;
+       
+  width: 100%; /* Ширина таблицы */  
+  border-collapse: collapse; /* Схлопывание границ */  
+}  
+  
+td, th {  
+  padding: 10px; /* Отступы внутри ячеек */  
+  border: 1px solid #dddddd; /* Границы ячеек */  
+}  
+  
+tr:hover td, tr:hover th {  
+  background-color: #f5f5f5; /* Цвет фона при наведении */  
+  cursor: pointer; /* Курсор при наведении */ 
+      
+}
+
+background-color: #11f7b2;
