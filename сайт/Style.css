@@ -1,0 +1,33 @@
+body{
+background-color: #ebe6ba;
+font-family: "MV BOLI", "SEGOE SCRIPT", sans-serif;
+max-width: 800px;
+margin: 50px auto;
+padding:50px;
+font-size:22px;
+
+}
+
+h1{
+	color: Navy;
+	text-align: center;
+}
+
+p{
+	line-height: 1.6;
+	color: #333;
+}
+
+ul {
+    list-style-type: none; 
+    padding: 0;
+}
+
+li {
+    background-color: #eaecd9; 
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); 
+    border-left: 5px solid rgb(167, 224, 226);
+}
