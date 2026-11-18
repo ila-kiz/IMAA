@@ -1,0 +1,19 @@
+
+const int a1 = 7;
+const int s = A0;
+
+void setup() {
+    pinMode(a1, OUTPUT);
+
+}
+
+void loop() {
+    int val = analogRead(s);
+    
+    if (val > 300) {
+    timer = millis(1000);  
+    isWorking = true;
+    } else {
+        digitalWrite(a1, LOW);
+    }
+}

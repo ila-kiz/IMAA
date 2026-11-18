@@ -1,0 +1,11 @@
+
+const int a = A0
+const int a1 =10
+const int a2 =7
+struct led {
+    int pin
+    bool state 
+}
+led leds[3]{{13,false} {6,false} {5,false}}
+bool d = true 
+bool
