@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="матрица/матрица.vcxproj" Id="defa1405-4990-4c85-8c57-f7f419790f34" />
+</Solution>
