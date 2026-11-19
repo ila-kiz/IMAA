@@ -1,0 +1,6 @@
+﻿  tablica 2.cpp
+C:\Users\Student\Documents\Скрябин 1РУП 9 26\Модули коды\tablica 2\tablica 2\tablica 2.cpp(4,20): error C2440: инициализация: невозможно преобразовать "initializer list" в "int"
+      C:\Users\Student\Documents\Скрябин 1РУП 9 26\Модули коды\tablica 2\tablica 2\tablica 2.cpp(4,20):
+      Инициализатор содержит слишком много элементов
+  
+C:\Users\Student\Documents\Скрябин 1РУП 9 26\Модули коды\tablica 2\tablica 2\tablica 2.cpp(11,36): error C2109: для индекса требуется массив или указатель
