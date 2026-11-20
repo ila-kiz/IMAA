@@ -1,6 +1,10 @@
 ﻿#include <cstdio>   // Для printf и scanf
 #include <windows.h>
 #include <cstdlib>
+// библиотеки рандомайзера
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 
 const int h = 15; // высота
@@ -21,15 +25,15 @@ struct Ship{
 
 void line()
 {
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < h; i++)
 	{
-		for (int j = 0; j < 15; j++)
+		for (int j = 0; j < w; j++)
 		{
 			arry[i][j] = '.';
 
 		}
 	}
-	for (int j = 0; j < 15; j++)
+	for (int j = 0; j < w; j++)
 	{
 		arry[0][j] = ' _';
 		arry[14][j] = ' _';
@@ -41,9 +45,9 @@ void line()
 	}
 
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < h; i++)
 	{
-		for (int j = 0; j < 15; j++)
+		for (int j = 0; j < w; j++)
 		{
 			printf("%c", arry[i][j]); //вывод одного символа - %c
 		}
@@ -52,6 +56,7 @@ void line()
 
 
 }
+
 
 void draw()
 {
@@ -67,10 +72,12 @@ void draw()
 
 int main()
 {
+	srand((unsigned int)time(NULL));
+
 	line();
 	draw(); 
 	clear();
-
+	printf("Player table:\n ");
 	int row, col;
 
 	while (true) {
@@ -83,8 +90,18 @@ int main()
 
 		if (row >= 2 && row <= h && col >= 2 && col <= w) { // не выходит ли за поля
 
-			arry[row - 1][col - 1] = '#'; // символ в нужную клетку
-			break; //выход из цикла
+			if (rand() % 2 == 1) {
+				arry[row - 1][col - 1] = 'X'; // Попадение 
+				clear();
+				draw();
+				printf("\nPopal!\n");
+			}
+			else {
+				arry[row - 1][col - 1] = '*'; // мимо
+				clear();
+				draw();
+				printf("\nMimo!\n");
+			}
 		}
 		else
 		{
@@ -96,4 +113,7 @@ int main()
 	clear();
 	draw(); 
 	printf("\nWell done!\n");
+
+
+
 }
