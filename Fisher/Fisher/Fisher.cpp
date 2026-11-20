@@ -1,6 +1,7 @@
-﻿#include <iostream>
-#include <windows.h> // Для Sleep()
-#include <cstdlib>   // Для system("cls")
+﻿#include <cstdio>   // Для printf и scanf
+#include <windows.h>
+#include <cstdlib>
+
 
 const int h = 15; // высота
 const int w = 15; // ширина
@@ -20,7 +21,6 @@ struct Ship{
 
 void line()
 {
-	char arry[15][15];
 	for (int i = 0; i < 15; i++)
 	{
 		for (int j = 0; j < 15; j++)
@@ -55,7 +55,6 @@ void line()
 
 void draw()
 {
-	char arry[h][w];
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
 			printf("%c ", arry[i][j]);
@@ -74,17 +73,25 @@ int main()
 
 	int row, col;
 
+	while (true) {
+		printf("\n Vvedite stroly (1-15): ");
 
-	printf("\n Vvedite stroly (1-15): ");
-	scanf("%d", &row);
+		scanf_s("%d", &row);
 
-	printf("\n Vvedite stolbec (1-15): ");
-	scanf("%d", &col); //адрес переменой
+		printf("\n Vvedite stolbec (1-15): ");
+		scanf_s("%d", &col); //адрес переменой
 
-	if (row >= 1 && row <= h && col >= 1 && col <= w) { // не выходит ли за поля
+		if (row >= 2 && row <= h && col >= 2 && col <= w) { // не выходит ли за поля
 
-		arry[row - 1][col - 1] = '#'; // Ставим символ в нужную клетку
+			arry[row - 1][col - 1] = '#'; // символ в нужную клетку
+			break; //выход из цикла
+		}
+		else
+		{
+			printf("Error!");
+		}
 	}
+
 
 	clear();
 	draw(); 
