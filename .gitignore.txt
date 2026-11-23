@@ -3,6 +3,10 @@
 #.exe
 #.pdb
 
+
+git rm -r --cached D:\Кузин Илья 1РУП-9-26\Кузин Илья 1РУп9-26 gitHub\IMAA
+
+
 # Build results
 [Bb]in/
 [Oo]bj/
