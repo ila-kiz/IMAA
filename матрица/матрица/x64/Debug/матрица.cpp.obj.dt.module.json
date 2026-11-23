@@ -1,0 +1,14 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "x64\\Debug\\матрица.obj",
+            "outputs": [
+                "x64\\Debug\\матрица.cpp.obj.dt.module.json",
+                "x64\\Debug\\матрица.cpp.obj.dt.d.json"
+            ],
+            "requires": []
+        }
+    ]
+}

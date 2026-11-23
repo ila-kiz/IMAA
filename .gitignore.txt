@@ -1,31 +1,62 @@
-#Binaarless
-#.dll
-#.exe
-#.pdb
-
-
-# Build results
-[Bb]in/
-[Oo]bj/
-
-# Visual studio
-.vs/
+## Пользовательские файлы Visual Studio
+*.rsuser
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+.vs/
 
-# ReSharper
-_ReSharper*/
-*.DotSettings.user
+## Результаты сборки (Debug / Release / x64 / x86 и др.)
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
 
-# NuGet
-packages/
+## Кэш IntelliSense, базы данных символов и профилирование
+*.db
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+*.ipch
+ipch/
+*.aps
+*.ncb
+*.sdf
+*.opensdf
+*.cachefile
+*.psess
+*.vsp
+*.vspx
+*.sap
 
-# Rider
-.idea/
+## Скомпилированные бинарные и объектные файлы C++
+*.obj
+*.o
+*.exe
+*.dll
+*.lib
+*.pdb
+*.ilk
+*.exp
+*.idb
+*.pch
+*.tlog
+*.lastbuildstate
 
-# Misc
-*.log
+## Временные и системные файлы
+*.tmp
+*.bak
+~$*
 Thumbs.db
-DS_Store
+.DS_Store
