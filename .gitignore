@@ -1,20 +1,55 @@
-# Результаты сборки (самое главное)
-[Bb]in/
-[Oo]bj/
+# === C++ ===
+# Объектные файлы
+*.obj
+*.o
+*.lo
+
+# Исполняемые файлы
+*.exe
+*.out
+*.app
+
+# Библиотеки
+*.dll
+*.lib
+*.exp
+*.so
+*.dylib
+*.a
+
+# Препроцессированные заголовки
+*.pch
+*.gch
+
+# Отладочная информация (символы)
+*.pdb
+*.ilk
+*.idb
+
+# === Visual Studio ===
+# Кэш и настройки (локальные для каждого)
+.vs/
+ipch/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.VC.opendb
+
+# Результаты сборки
 [Dd]ebug/
 [Rr]elease/
 x64/
 x86/
+[Bb]in/
+[Oo]bj/
 
-# Пользовательские настройки Visual Studio (не должны попадать в репозиторий)
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-
-# Временные файлы и кэш
+# Временные файлы
 *.log
+*.tlog
 *.tmp
-*.vspscc
-*.vssscc
+*.aps
+*.ncb
+*.opensdf
+*.sdf
