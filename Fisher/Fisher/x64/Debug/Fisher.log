@@ -1,6 +1,0 @@
-﻿  Fisher.cpp
-C:\Users\Student\Desktop\AR\Fisher\Fisher\Fisher.cpp(38,16): warning C4305: =: усечение из "int" в "char"
-C:\Users\Student\Desktop\AR\Fisher\Fisher\Fisher.cpp(38,16): warning C4309: =: усечение константного значения
-C:\Users\Student\Desktop\AR\Fisher\Fisher\Fisher.cpp(39,17): warning C4305: =: усечение из "int" в "char"
-C:\Users\Student\Desktop\AR\Fisher\Fisher\Fisher.cpp(39,17): warning C4309: =: усечение константного значения
-  Fisher.vcxproj -> C:\Users\Student\Desktop\AR\Fisher\x64\Debug\Fisher.exe
