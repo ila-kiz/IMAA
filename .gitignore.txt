@@ -1,0 +1,30 @@
+# Binaries
+*.dll
+*.exe
+*.pdb
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# NuGet
+packages/
+
+# Rider
+.idea/
+
+# Misc
+*.log
+Thumbs.db
+DS_Store
