@@ -1,7 +1,0 @@
-<Solution>
-  <Configurations>
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
-  <Project Path="Fisher/Fisher.vcxproj" Id="e22deaae-7c4b-4c7d-aa5e-4916d541136f" />
-</Solution>
