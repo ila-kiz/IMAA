@@ -4,49 +4,46 @@
 #include <cstdio>
 
 const int SIZE = 20;
-const int SHIP_COUNT = 5;
-char table[SIZE][SIZE];
+const int SHIPS_COUNT = 10;
 
 struct Ship {
-    int length;
+    int size;
     int x;
     int y;
-    bool isHorizontal;
+    bool horizontal;
     int hits;
-    bool isSunk;
+    bool dead;
 };
 
-void matrix() {
+void init_map(char map[SIZE][SIZE]) {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             if ((i == 0 || i == SIZE - 1) && (j == 0 || j == SIZE - 1)) {
-                table[i][j] = '+';
+                map[i][j] = '+';
             }
             else if (i == 0 || i == SIZE - 1) {
-                table[i][j] = '-';
+                map[i][j] = '-';
             }
             else if (j == 0 || j == SIZE - 1) {
-                table[i][j] = '|';
+                map[i][j] = '|';
             }
             else {
-                table[i][j] = ' ';
+                map[i][j] = ' ';
             }
         }
     }
 }
 
-bool can_place(Ship s) {
-    for (int i = 0; i < s.length; i++) {
-        int cur_x = s.isHorizontal ? s.x : s.x + i;
-        int cur_y = s.isHorizontal ? s.y + i : s.y;
-
-        if (cur_x < 1 || cur_x >= SIZE - 1 || cur_y < 1 || cur_y >= SIZE - 1) {
+bool can_place(char map[SIZE][SIZE], Ship ship) {
+    for (int i = 0; i < ship.size; i++) {
+        int x = ship.horizontal ? ship.x : ship.x + i;
+        int y = ship.horizontal ? ship.y + i : ship.y;
+        if (x < 1 || x >= SIZE - 1 || y < 1 || y >= SIZE - 1) {
             return false;
         }
-
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
-                if (table[cur_x + dx][cur_y + dy] == '#') {
+                if (map[x + dx][y + dy] == '#') {
                     return false;
                 }
             }
@@ -55,134 +52,192 @@ bool can_place(Ship s) {
     return true;
 }
 
-void draw_ship(Ship s) {
-    for (int i = 0; i < s.length; i++) {
-        if (s.isHorizontal) {
-            table[s.x][s.y + i] = '#';
+void draw_ship(char map[SIZE][SIZE], Ship ship) {
+    for (int i = 0; i < ship.size; i++) {
+        if (ship.horizontal) {
+            map[ship.x][ship.y + i] = '#';
         }
         else {
-            table[s.x + i][s.y] = '#';
+            map[ship.x + i][ship.y] = '#';
         }
     }
 }
 
-int check_hit(Ship ships[], int x, int y) {
-    for (int i = 0; i < SHIP_COUNT; i++) {
-        for (int j = 0; j < ships[i].length; j++) {
-            int cur_x = ships[i].isHorizontal ? ships[i].x : ships[i].x + j;
-            int cur_y = ships[i].isHorizontal ? ships[i].y + j : ships[i].y;
-
-            if (cur_x == x && cur_y == y) {
-                ships[i].hits++;
-                if (ships[i].hits >= ships[i].length && !ships[i].isSunk) {
-                    ships[i].isSunk = true;
-                    return 2;
-                }
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
-int main() {
-    srand(static_cast<unsigned int>(time(NULL)));
-
-    matrix();
-
-    Ship ships[SHIP_COUNT];
-    for (int i = 0; i < SHIP_COUNT; i++) {
+void place_ships(char map[SIZE][SIZE], Ship* ships) {
+    for (int i = 0; i < SHIPS_COUNT; i++) {
         bool placed = false;
         while (!placed) {
-            ships[i].length = (rand() % 4) + 1;
-            ships[i].isHorizontal = (rand() % 2 == 0);
+            ships[i].size = (rand() % 4) + 1;
+            ships[i].horizontal = (rand() % 2 == 0);
             ships[i].hits = 0;
-            ships[i].isSunk = false;
+            ships[i].dead = false;
 
-            if (ships[i].isHorizontal) {
+            if (ships[i].horizontal) {
                 ships[i].x = (rand() % (SIZE - 2)) + 1;
-                ships[i].y = (rand() % (SIZE - 1 - ships[i].length)) + 1;
+                ships[i].y = (rand() % (SIZE - 1 - ships[i].size)) + 1;
             }
             else {
-                ships[i].x = (rand() % (SIZE - 1 - ships[i].length)) + 1;
+                ships[i].x = (rand() % (SIZE - 1 - ships[i].size)) + 1;
                 ships[i].y = (rand() % (SIZE - 2)) + 1;
             }
 
-            if (can_place(ships[i])) {
-                draw_ship(ships[i]);
+            if (can_place(map, ships[i])) {
+                draw_ship(map, ships[i]);
                 placed = true;
             }
         }
     }
+}
 
-    int x = -1;
-    int y = -1;
-    int last_status = 0;
+void start_game(char enemy_map[SIZE][SIZE], char player_map[SIZE][SIZE], Ship* player_ships) {
+    init_map(enemy_map);
+    init_map(player_map);
+    place_ships(player_map, player_ships);
+}
 
-    while (true) {
-        system("cls");
+void print_map(const char* title, char map[SIZE][SIZE]) {
+    printf("  ================= %s =================\n\n", title);
+    printf("     ");
+    for (int j = 0; j < SIZE - 2; ++j) {
+        printf("%c ", 'A' + j);
+    }
+    printf("\n");
 
-        char prev_char = ' ';
-        if (x != -1 && y != -1) {
-            prev_char = table[x][y];
-            if (prev_char == '#') {
-                prev_char = '*';
-                last_status = check_hit(ships, x, y);
-            }
-            else {
-                last_status = 0;
-            }
-            table[x][y] = '.';
+    for (int i = 0; i < SIZE; ++i) {
+        if (i > 0 && i < SIZE - 1) {
+            printf("%2d ", i);
+        }
+        else {
+            printf("   ");
         }
 
-        printf("     ");
-        for (int j = 0; j < SIZE - 2; ++j) {
-            printf("%c ", 'A' + j);
+        for (int j = 0; j < SIZE; ++j) {
+            printf("%c ", map[i][j]);
         }
         printf("\n");
+    }
+}
 
-        for (int i = 0; i < SIZE; ++i) {
-            if (i > 0 && i < SIZE - 1) {
-                printf("%2d ", i);
+void print_status(int status) {
+    printf("\n");
+    if (status == 2) printf("Dead!\n");
+    else if (status == 1) printf("Hit!\n");
+    else if (status == 0) printf("Away\n");
+    else if (status == 3) printf("Already shot!\n");
+    else if (status == 4) printf("Wrong input!\n");
+}
+
+void draw_screen(char enemy_map[SIZE][SIZE], char player_map[SIZE][SIZE], int status) {
+    system("cls");
+    print_map("ENEMY", enemy_map);
+    printf("\n");
+    print_map("YOU", player_map);
+    print_status(status);
+}
+
+void clear_input() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF) {}
+}
+
+bool read_shot(int& x, int& y) {
+    char letter = ' ';
+    printf("\nx: ");
+    if (scanf_s("%d", &x) != 1) {
+        clear_input();
+        return false;
+    }
+    printf("y: ");
+    if (scanf_s(" %c", &letter, 1) != 1) {
+        clear_input();
+        return false;
+    }
+    clear_input();
+
+    if (letter >= 'a' && letter <= 'z') {
+        letter = letter - 'a' + 'A';
+    }
+    y = letter - 'A' + 1;
+
+    return (x > 0 && x < SIZE - 1 && y > 0 && y < SIZE - 1);
+}
+
+int read_result() {
+    int res = -1;
+    printf("Result (0 - away, 1 - hit, 2 - dead): ");
+    if (scanf_s("%d", &res) != 1) {
+        clear_input();
+        return 4;
+    }
+    clear_input();
+    if (res < 0 || res > 2) {
+        return 4;
+    }
+    return res;
+}
+
+void mark_dead_ship(char map[SIZE][SIZE], int x, int y) {
+    int min_x = x, max_x = x;
+    int min_y = y, max_y = y;
+
+    while (min_x > 1 && map[min_x - 1][y] == '*') min_x--;
+    while (max_x < SIZE - 2 && map[max_x + 1][y] == '*') max_x++;
+    while (min_y > 1 && map[x][min_y - 1] == '*') min_y--;
+    while (max_y < SIZE - 2 && map[x][max_y + 1] == '*') max_y++;
+
+    for (int i = min_x - 1; i <= max_x + 1; i++) {
+        for (int j = min_y - 1; j <= max_y + 1; j++) {
+            if (map[i][j] == ' ') {
+                map[i][j] = '.';
             }
-            else {
-                printf("   ");
-            }
-
-            for (int j = 0; j < SIZE; ++j) {
-                printf("%c ", table[i][j]);
-            }
-            printf("\n");
-        }
-
-        if (x != -1 && y != -1) {
-            table[x][y] = prev_char;
-        }
-
-        if (last_status == 2) {
-            printf("\nShip destroyed!\n");
-        }
-        else if (last_status == 1) {
-            printf("\nHit!\n");
-        }
-
-        int new_x = 0;
-        char col_char = ' ';
-        printf("\nx: ");
-        scanf_s("%d", &new_x);
-        printf("y: ");
-        scanf_s(" %c", &col_char, 1);
-
-        if (col_char >= 'a' && col_char <= 'z') {
-            col_char = col_char - 'a' + 'A';
-        }
-        int new_y = col_char - 'A' + 1;
-
-        if (new_x > 0 && new_x < SIZE - 1 && new_y > 0 && new_y < SIZE - 1) {
-            x = new_x;
-            y = new_y;
         }
     }
+}
+
+int mark_shot(char map[SIZE][SIZE], int x, int y) {
+    if (map[x][y] != ' ') {
+        return 3;
+    }
+
+    int res = read_result();
+    if (res == 0) {
+        map[x][y] = '.';
+    }
+    else if (res == 1) {
+        map[x][y] = '*';
+    }
+    else if (res == 2) {
+        map[x][y] = '*';
+        mark_dead_ship(map, x, y);
+    }
+    return res;
+}
+
+void game_loop(char enemy_map[SIZE][SIZE], char player_map[SIZE][SIZE]) {
+    int status = -1;
+
+    while (true) {
+        draw_screen(enemy_map, player_map, status);
+
+        int x = 0, y = 0;
+        if (!read_shot(x, y)) {
+            status = 4;
+            continue;
+        }
+
+        status = mark_shot(enemy_map, x, y);
+    }
+}
+
+int main() {
+    srand((unsigned int)time(NULL));
+
+    char enemy_map[SIZE][SIZE];
+    char player_map[SIZE][SIZE];
+    Ship player_ships[SHIPS_COUNT];
+
+    start_game(enemy_map, player_map, player_ships);
+    game_loop(enemy_map, player_map);
 
     return 0;
 }
