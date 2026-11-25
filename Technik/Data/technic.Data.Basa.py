@@ -32,10 +32,18 @@
 
 
 
+import os
 import pandas as pd
 
 # --- Шаг 1. Создание запроса: загрузка базы и выбор нужных полей ---
-df = pd.read_csv("База данных.csv", sep=";")
+
+# путь к файлу строим от папки, где лежит сам скрипт,
+# чтобы запуск из любого терминала находил базу
+script_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(script_dir, "База данных.csv")
+
+df = pd.read_csv(csv_path, sep=";", encoding="utf-8-sig")
+
 print("--- Загруженная база данных ---")
 print(df.head())
 print("\n--- Информация о таблице ---")
@@ -56,7 +64,7 @@ search = search[search["Год начала"] >= 2010]
 
 # --- Шаг 3. Обработка данных: сортировка от новых к старым ---
 result = search.sort_values(by="Год начала", ascending=False)
-result = result.assign(Статус="Эксплуатируются")
+result = result.assign(Статус="эксплуатируются")
 
 # --- Шаг 4. Проверка результата ---
 print("\n--- Итоговая выборка ---")
@@ -65,7 +73,7 @@ print(result[["Название трамвая", "Модель", "Даты эк�
 print(f"\nПроверка сортировки пройдена: "
       f"{result['Год начала'].is_monotonic_decreasing}")
 print(f"Проверка условия 'с 2010 года': "
-      f"{bool((result['Год начала'] >= 2010).all())}")
+      f"{(result['Год начала'] >= 2010).all()}")
 print(f"Всего моделей в выборке: {len(result)}")
 
 print("\nНажмите Enter для выхода...")

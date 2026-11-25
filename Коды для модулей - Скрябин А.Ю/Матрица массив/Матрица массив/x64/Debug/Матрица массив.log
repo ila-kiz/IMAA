@@ -1,3 +1,5 @@
 ﻿  Матрица массив.cpp
-  LINK : не найден или не выполнена сборка C:\Users\Student\Documents\GitHub\IMAA\Коды для модулей - Скрябин А.Ю\Матрица массив\x64\Debug\Матрица массив.exe при последней инкрементной компоновке; выполняется полная компоновка
-  Матрица массив.vcxproj -> C:\Users\Student\Documents\GitHub\IMAA\Коды для модулей - Скрябин А.Ю\Матрица массив\x64\Debug\Матрица массив.exe
+C:\Users\Student\Documents\GitHub\IMAA\Коды для модулей - Скрябин А.Ю\Матрица массив\Матрица массив\Матрица массив.cpp(11,11): error C2377: SIZE: переопределение; typedef нельзя перегрузить другим символом
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\windef.h(190,3):
+       см. объявление "SIZE"
+  
