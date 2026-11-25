@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Morsloy_boy/Morsloy_boy.vcxproj" Id="adc4d826-fddc-4141-9f5a-e5968a52de69" />
+</Solution>
