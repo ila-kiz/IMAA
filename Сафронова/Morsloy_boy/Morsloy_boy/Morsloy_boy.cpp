@@ -8,16 +8,12 @@
 #include <locale.h> // библиотека для русского языка
 
 
-const int h = 15; // высота
-const int w = 15; // ширина
+const int h = 10; // высота
+const int w = 10; // ширина
 char arry[h][w]; //поле
 char fru[h][w]; // второе поле
 int choice; // выбор для меню
-
-const int t = 5; // Высота
-const int o = 13; // Ширина
-char title[t][o];
-
+const int num = 10;
 
 void clear()
 {
@@ -44,12 +40,12 @@ void line()
 	for (int j = 0; j < w; j++)
 	{
 		arry[0][j] = '_'; fru[0][j] = '_';
-		arry[14][j] = '_'; fru[14][j] = '_';
+		arry[9][j] = '_'; fru[9][j] = '_';
 	}
-	for (int i = 1; i < 14; i++)
+	for (int i = 1; i < 9; i++)
 	{
 		arry[i][0] = '|'; fru[i][0] = '|';
-		arry[i][14] = '|'; fru[i][14] = '|';
+		arry[i][9] = '|'; fru[i][9] = '|';
 	}
 
 
@@ -115,6 +111,121 @@ bool menu()
 	}
 }
 
+void boat()
+{
+	int count = 0; //сколько кораблей 
+	int num = 0;
+	int place = 0;
+
+	clear();
+	printf("Сколько кораблей вы хотите выставить? (от 1 до 10): ");
+	scanf_s("%d", &count);
+
+	while (place < count)
+	{
+		int row, col, length, isMorizontal;
+
+		clear();
+		draw();
+		printf("\nТаблица кораблей:\n");
+
+		printf("\n Введите строку (2-9): ");
+		scanf_s("%d", &row);
+
+		printf("\n Введите столбик (2-9): ");
+		scanf_s("%d", &col);
+
+		printf("\n Введите длину (1-4): ");
+		scanf_s("%d", &length);
+
+		printf("\n Ориентация (1 - вертикально, 0 - горизонтально)");
+		scanf_s("%d", &isMorizontal);
+
+		int r = row - 1;
+		int c = col - 1;
+		bool canPlace = true;
+
+		if (length >= 1 && length <= 4 && isMorizontal == 1 && r >= 1 && r + length - 1 <= 8 && c >= 1 && c <= 8)
+		{ //диапозон и координаты, ограничения корабля, корабль длиной от 1 до 4, не лезит за 13 строку
+			for (int i = 0; i < length; i++)
+			{
+				arry[r + i][c] = '#';
+			}
+			break;
+		}
+		else if (length >= 1 && length <= 4 && isMorizontal == 0 && r >= 1 && r <= 8 && c >= 1 && c + length - 1 <= 8)
+		{
+			for (int i = 0; i < length; i++)
+			{
+				arry[r][c + i] = '#';
+			}
+			break;
+		}
+		else
+		{
+			printf("Error!\n");
+		}
+	}
+
+	}
+
+
+void Player()
+{
+	int row, col, length, isMorizontal;
+	while (true)
+	{
+		draw();
+		clear();
+		printf("\nТаблица игрока:\n");
+
+		printf("\n Введите строку (2-9): ");
+		scanf_s("%d", &row);
+
+		printf("\n Введите столбик (2-9): ");
+		scanf_s("%d", &col); //адрес переменой
+
+		int r = row - 1;
+		int c = col - 1;
+
+
+		if (isMorizontal == 1 && r >= 1 && r + length - 1 <= 9 && c >= 1 && c <= 9)
+		{
+			for (int i = 0; i < length; i++)
+			{
+				fru[r + i][c] = '#';
+			}
+			break;
+		}
+
+		else if (isMorizontal == 0 && r >= 1 && r <= 9 && c >= 1 && c + length - 1 <= 9)
+		{
+			for (int i = 0; i < length; i++)
+			{
+				fru[r][c + i] = '#';
+			}
+			break;
+		}
+		else
+		{
+			printf("Корабль выходит за границы поля!\n");
+		}
+	}
+
+
+}
+
+void win()
+{
+	int row, col, length, isMorizontal;
+	int shipR, shipC;
+
+	if (shipR == row && shipC == col)
+		printf("\nВы выиграли!\n");
+	else
+		printf("\nВы проиграли!\n");
+
+}
 
 
 int main()
@@ -129,96 +240,10 @@ int main()
 	int row, col, length, isMorizontal;
 	int shipR, shipC;
 
-
-	while (true)
-	{
-		clear();
-		draw();
-		printf("\nТаблица кораблей:\n");
-
-		printf("\n Введите строку (2-14): ");
-		scanf_s("%d", &row);
-
-		printf("\n Введите столбик (2-14): ");
-		scanf_s("%d", &col);
-
-		printf("\n Введите длину (1-4): ");
-		scanf_s("%d", &length);
-
-		printf("\n Ориентация (1 - вертикально, 0 - горизонтально)");
-		scanf_s("%d", &isMorizontal);
-
-		int r = row - 1;
-		int c = col - 1;
-		shipR = row;
-		shipC = col;
-
-		if (length >= 1 && length <= 4 && isMorizontal == 1 && r >= 1 && r + length - 1 <= 13 && c >= 1 && c <= 13) 
-		{ //диапозон и координаты, ограничения корабля, корабль длиной от 1 до 4, не лезит за 13 строку
-			for (int i = 0; i < length; i++) 
-			{
-				arry[r + i][c] = '#';
-			}
-			break;
-		}
-		else if (length >= 1 && length <= 4 && isMorizontal == 0 && r >= 1 && r <= 13 && c >= 1 && c + length - 1 <= 13) 
-		{
-			for (int i = 0; i < length; i++) 
-			{
-				arry[r][c + i] = '#';
-			}
-			break;
-		}
-		else 
-		{
-			printf("Error!\n");
-		}
-	}
-
-	while (true)
-	{
-		draw();
-		clear();
-		printf("\nТаблица игрока:\n");
-
-		printf("\n Введите строку (2-14): ");
-		scanf_s("%d", &row);
-
-		printf("\n Введите столбик (2-14): ");
-		scanf_s("%d", &col); //адрес переменой
-
-		int r = row - 1;
-		int c = col - 1;
-
-
-		if (isMorizontal == 1 && r >= 1 && r + length - 1 <= 14 && c >= 1 && c <= 14) 
-		{
-			for (int i = 0; i < length; i++) 
-			{
-				fru[r + i][c] = '#';
-			}
-			break;
-		}
-
-		else if (isMorizontal == 0 && r >= 1 && r <= 14 && c >= 1 && c + length - 1 <= 14) 
-		{
-			for (int i = 0; i < length; i++) 
-			{
-				fru[r][c + i] = '#';
-			}
-			break;
-		}
-		else 
-		{
-			printf("Корабль выходит за границы поля!\n");
-		}
-	}
+	boat();
+	Player();
 
 	clear();
 	draw();
-
-	if (shipR == row && shipC == col)
-		printf("\nВы выиграли!\n");
-	else
-		printf("\nВы проиграли!\n");
+	win();
 }

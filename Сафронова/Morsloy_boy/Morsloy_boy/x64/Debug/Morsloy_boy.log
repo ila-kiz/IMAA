@@ -1,2 +1,15 @@
 ﻿  Morsloy_boy.cpp
-  Morsloy_boy.vcxproj -> C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\x64\Debug\Morsloy_boy.exe
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(220,16): warning C4101: length: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(220,24): warning C4101: isMorizontal: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(241,6): warning C4101: shipR: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(240,6): warning C4101: row: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(240,16): warning C4101: length: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(241,13): warning C4101: shipC: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(240,11): warning C4101: col: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(240,24): warning C4101: isMorizontal: неиспользованная локальная переменная
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(223,1): error C4700: использована неинициализированная локальная переменная "shipR"
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(223,1): error C4700: использована неинициализированная локальная переменная "row"
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(223,1): error C4700: использована неинициализированная локальная переменная "shipC"
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(223,1): error C4700: использована неинициализированная локальная переменная "col"
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(192,1): error C4700: использована неинициализированная локальная переменная "isMorizontal"
+C:\Users\Student\Documents\1РУП-9-26_Сафронова_А.П\Morsloy_boy\Morsloy_boy\Morsloy_boy.cpp(192,1): error C4700: использована неинициализированная локальная переменная "length"
