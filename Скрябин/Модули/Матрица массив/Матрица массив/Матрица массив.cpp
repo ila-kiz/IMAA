@@ -18,6 +18,7 @@ int myShips = 0;      /* клеток моих кораблей */
 int enemyShips = 0;   /* клеток кораблей противника */
 int myHits = 0;       /* мои попадания */
 int enemyHits = 0;    /* попаданий противника */
+int gameExit = 0;     /* 1 — игрок попросил выйти из игры */
 
 /* Кириллические буквы столбцов (10 штук, Й пропускаем) */
 const char stolby[10] = { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 'К' };
@@ -147,11 +148,23 @@ int udalitKorabl(char pole[SIZE1][SIZE1], int a, int b, int* vsego)
     return razmer;
 }
 
-/* Расстановка кораблей: строка (1-10), столбец (А-К), размер (1-4), ориентация (H/V)
-   Ввод "-" — отменить последний поставленный корабль */
 void set_color(int color) {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
+
+/* Спрашиваем подтверждение выхода; при согласии ставим флаг */
+int sprositVykhod(void)
+{
+    char otvet;
+    printf("Точно выйти из игры? (Y - да / N - нет): ");
+    scanf_s(" %c", &otvet, 1);
+    while (getchar() != '\n');   /* съедаем остаток строки */
+    if (otvet == 'Y' || otvet == 'y') { gameExit = 1; return 1; }
+    return 0;
+}
+
+/* Расстановка кораблей: строка (1-10), столбец (А-К), размер (1-4), ориентация (H/V)
+   Ввод "-" — отменить последний поставленный корабль */
 void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
 {
     int a, b, razmer, k;
@@ -171,6 +184,7 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
     printf("X  — попадание\n");
     printf("%%  — подбитая клетка (уже поражена)\n");
     printf(".  — неизвестная/пустая клетка\n");
+    printf("S — пропуск хода, Q — выход из игры.");
     set_color(11);
     printf("Столбцы — А..К (без Й), строки — 1..10\n");
     printf("\n%s: введите строку (1-10), столбец (А-К), размер (1-4) и ориентацию.\n", kto);
@@ -178,6 +192,7 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
     printf("H - горизонтально, V - вертикально (латинские буквы).\n");
     printf("-            — отменить последний поставленный корабль\n");
     printf("Удалить корабль по клетке: строка столбец 0, напр. 3 Б 0\n");
+    printf("Q            — выйти из игры\n");
     printf("Закончить расстановку: 0 0 0 X\n");
     printf("Флот: 4-палубных - 1, 3-палубных - 2, 2-палубных - 3, 1-палубных - 4\n");
     printf("----------------------------\n\n");
@@ -190,6 +205,14 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
         /* пропускаем ведущие пробелы и табуляции */
         i = 0;
         while (stroka[i] == ' ' || stroka[i] == '\t') i++;
+
+        /* команда "Q": выход из игры */
+        if (stroka[i] == 'Q' || stroka[i] == 'q')
+        {
+            if (sprositVykhod()) return;
+            vyvod(0);
+            continue;
+        }
 
         /* команда "-": отмена последнего поставленного корабля */
         if (stroka[i] == '-' && (stroka[i + 1] == '\n' || stroka[i + 1] == '\0'))
@@ -291,19 +314,41 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
     }
 }
 
-/* Мой выстрел */
-void vashVystrel(void)
+/* Мой выстрел.
+   Возвращает: 1 — выстрел сделан, 0 — пропуск хода, -1 — выход из игры */
+int vashVystrel(void)
 {
-    int a, b;
+    int a, b, j;
     char bChar;
+    char stroka[100];
 
     while (1)
     {
-        printf("Ваш выстрел (строка и столбец, напр. 3 Б): ");
-        if (scanf_s("%d %c", &a, &bChar, 1) != 2)
+        printf("Ваш выстрел (строка и столбец, напр. 3 Б).\n");
+        printf("S — пропустить ход, Q — выйти из игры: ");
+
+        if (fgets(stroka, sizeof(stroka), stdin) == NULL) continue;
+
+        j = 0;
+        while (stroka[j] == ' ' || stroka[j] == '\t') j++;
+
+        /* выход из игры */
+        if (stroka[j] == 'Q' || stroka[j] == 'q')
+        {
+            if (sprositVykhod()) return -1;
+            continue;
+        }
+
+        /* пропуск хода */
+        if (stroka[j] == 'S' || stroka[j] == 's')
+        {
+            printf("Вы пропустили свой выстрел.\n");
+            return 0;
+        }
+
+        if (sscanf_s(stroka, "%d %c", &a, &bChar, 1) != 2)
         {
             printf("Ошибка: неверный ввод\n");
-            while (getchar() != '\n');
             continue;
         }
 
@@ -325,7 +370,7 @@ void vashVystrel(void)
                 m[a][b] = '#';      /* промах */
                 printf("Мимо.\n");
             }
-            break;
+            return 1;
         }
         printf("Ошибка: строка 1-10, столбец А-К.\n");
     }
@@ -363,21 +408,33 @@ int main(void)
     vyvod(0);
 
     razmestit(t, "Ваши корабли", &myShips);
+    if (gameExit) { printf("\nИгра прервана по вашему требованию.\n"); return 0; }
+
     razmestit(e, "Корабли противника", &enemyShips);
+    if (gameExit) { printf("\nИгра прервана по вашему требованию.\n"); return 0; }
 
     printf("\nБой! Вводите координаты выстрела: строка (1-10) и столбец (А-К).\n");
+    printf("Команды: S — пропуск хода, Q — выход из игры.\n");
     vyvod(1);
 
     while (myHits < enemyShips && enemyHits < myShips)
     {
-        vashVystrel();
+        int res = vashVystrel();
+
+        if (res == -1) break;   /* выход из игры */
+
+        if (res == 0)
+            printf("Противник стреляет, пока вы пропускаете ход!\n");
         hodProtivnika();
+
         vyvod(1);
         printf("Счёт: вы попали %d из %d, противник %d из %d\n",
             myHits, enemyShips, enemyHits, myShips);
     }
 
-    if (myHits >= enemyShips)
+    if (gameExit)
+        printf("\nИгра прервана по вашему требованию.\n");
+    else if (myHits >= enemyShips)
         printf("\nПобеда! Вы потопили все корабли противника!\n");
     else
         printf("\nПоражение. Противник потопил все ваши корабли.\n");
