@@ -1,4 +1,4 @@
-﻿#include <cstdio>
+#include <cstdio>
 #include <cstdlib>
 #include <ctime>
 #include <windows.h>
@@ -9,16 +9,15 @@ const int TOTAL_DECKS = 20;
 const int MAX_UNDO = 10;
 const int SHIP_LENGTHS[SHIP_COUNT] = { 4, 3, 3, 2, 2, 2, 1, 1, 1, 1 };
 const char RUS_LETTERS[] = "АБВГДЕЖЗИК";
-
 const int SYM_MAX_LEN = 20;
 
-char SYM_EMPTY[SYM_MAX_LEN] = "\033[94m.\033[0m";   // Синий
-char SYM_SHIP[SYM_MAX_LEN] = "\033[93m#\033[0m";    // Желтый
-char SYM_HIT[SYM_MAX_LEN] = "\033[91mX\033[0m";     // Красный
-char SYM_MISS[SYM_MAX_LEN] = "\033[96m0\033[0m";    // Синий
+char SYM_EMPTY[SYM_MAX_LEN] = "\033[94m.\033[0m"; // Синий
+char SYM_SHIP[SYM_MAX_LEN] = "\033[93m#\033[0m"; // Желтый
+char SYM_HIT[SYM_MAX_LEN] = "\033[91mX\033[0m"; // Красный
+char SYM_MISS[SYM_MAX_LEN] = "\033[96m0\033[0m"; // Голубой
 char SYM_BORDER_CORNER[SYM_MAX_LEN] = "\033[37m+\033[0m"; // Белый
-char SYM_BORDER_H[SYM_MAX_LEN] = "\033[37m-\033[0m";      // Белый
-char SYM_BORDER_V[SYM_MAX_LEN] = "\033[37m|\033[0m";      // Белый
+char SYM_BORDER_H[SYM_MAX_LEN] = "\033[37m-\033[0m"; // Белый
+char SYM_BORDER_V[SYM_MAX_LEN] = "\033[37m|\033[0m"; // Белый
 
 struct Ship {
     int length;
@@ -47,12 +46,12 @@ void clear_input() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-// Проверяет, находятся ли координаты внутри игрового поля (от 1 до 10, не задевая рамку)
+// Проверяет, находятся ли координаты внутри игрового поля
 bool is_valid_cell(int x, int y) {
     return x >= 1 && x < BOARD_SIZE - 1 && y >= 1 && y < BOARD_SIZE - 1;
 }
 
-// Сохраняет текущее состояние игры в массив истории для возможности отмены хода (до 10 ходов)
+// Сохраняет текущее состояние игры в массив истории для возможности отмены хода
 void save_state(Game& game) {
     if (game.history_count == MAX_UNDO) {
         // Сдвигаем историю влево, удаляя самый старый элемент, чтобы освободить место для нового
@@ -69,7 +68,7 @@ void restore_state(Game& game) {
     game.current = game.history[--game.history_count];
 }
 
-// Инициализирует игровое поле: рисует внешнюю рамку (+, -, |) и заполняет внутренние клетки точками (.)
+// Инициализирует игровое поле: рисует внешнюю рамку и заполняет внутренние клетки точками
 void init_board(char board[BOARD_SIZE][BOARD_SIZE]) {
     for (int i = 0; i < BOARD_SIZE; i++) {
         for (int j = 0; j < BOARD_SIZE; j++) {
@@ -92,7 +91,7 @@ bool can_place(const char board[BOARD_SIZE][BOARD_SIZE], Ship s) {
 
         if (!is_valid_cell(cur_x, cur_y)) return false;
 
-        // Проверяем окружающие клетки (включая диагонали) на наличие других кораблей
+        // Проверяем окружающие клетки на наличие других кораблей
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 if (board[cur_x + dx][cur_y + dy] == '#') {
@@ -104,7 +103,7 @@ bool can_place(const char board[BOARD_SIZE][BOARD_SIZE], Ship s) {
     return true;
 }
 
-// Отрисовывает палубы корабля символом '#' на игровом поле
+// Отрисовывает палубы корабля на игровом поле
 void draw_ship(char board[BOARD_SIZE][BOARD_SIZE], Ship s) {
     for (int i = 0; i < s.length; i++) {
         int cur_x = s.x + (s.isHorizontal ? 0 : i);
@@ -113,7 +112,7 @@ void draw_ship(char board[BOARD_SIZE][BOARD_SIZE], Ship s) {
     }
 }
 
-// Автоматически расставляет все 10 кораблей случайным образом; при заходе в тупик сбрасывает поле и начинает заново
+// Автоматически расставляет все 10 кораблей случайным образом, если корали расставились не правильно (радом) генерирует заного
 void place_all_ships(GameState& state) {
     init_board(state.table);
     for (int i = 0; i < SHIP_COUNT; i++) {
@@ -168,7 +167,7 @@ int check_hit(Ship ships[], int x, int y) {
     return 0; // Мимо
 }
 
-// Помечает последнюю палубу как 'X', находит границы всего уничтоженного корабля и обводит его ореолом промахов ('0')
+// Помечает последнюю палубу как 'X', находит границы всего уничтоженного корабля и обводит его
 void mark_sunk(char board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     board[x][y] = 'X';
 
@@ -191,13 +190,11 @@ void mark_sunk(char board[BOARD_SIZE][BOARD_SIZE], int x, int y) {
     }
 }
 
-// Вспомогательная функция для получения символа из цветной строки (первый печатный символ после кода цвета)
+// Вспомогательная функция для получения символа из цветной строки, чтобы нормально выводились цветные символы
 char get_char_from_sym(const char* sym_str) {
-    // Пропускаем управляющие последовательности \033[...m
     const char* p = sym_str;
     while (*p) {
         if (*p == '\033') {
-            // Пропускаем до 'm'
             while (*p && *p != 'm') p++;
             if (*p == 'm') p++;
         }
@@ -208,8 +205,7 @@ char get_char_from_sym(const char* sym_str) {
     return '?';
 }
 
-// Выводит игровое поле в консоль вместе с заголовком, буквенными столбцами (А-К) и числовыми строками (1-10)
-// Теперь использует цветные строки из констант
+// Выводит игровое поле в консоль вместе с заголовком
 void print_board(const char board[BOARD_SIZE][BOARD_SIZE], const char* title) {
     printf("%s\n     ", title);
     for (int j = 0; j < BOARD_SIZE - 2; ++j) {
@@ -254,7 +250,7 @@ void print_status_message(int& msg_type, int& last_status) {
     last_status = 0;
 }
 
-// Переводит введенную русскую букву столбца (в любом регистре) в числовой индекс массива (от 1 до 10)
+// Переводит введенную русскую букву столбца (в любом регистре) в числовой индекс массива
 int get_col_index(char c) {
     if (c >= 'а' && c <= 'я') {
         c = c - 'а' + 'А';
@@ -265,15 +261,15 @@ int get_col_index(char c) {
     return -1;
 }
 
-// Запрашивает у пользователя координаты выстрела (число и букву) и проверяет их корректность
+// Запрашивает у пользователя координаты выстрела и проверяет их корректность
 bool get_coordinates(int& x, int& y) {
     char col_char = ' ';
-    printf("x (1-10): ");
+    printf("x: ");
     if (scanf_s("%d", &x) != 1) {
         clear_input();
         return false;
     }
-    printf("y (А-К): ");
+    printf("y: ");
     if (scanf_s(" %c", &col_char, 1) != 1) {
         clear_input();
         return false;
@@ -326,7 +322,7 @@ void handle_my_board_shot(Game& game, int x, int y, int& msg_type, int& last_sta
     }
 }
 
-// Обрабатывает выстрел игрока по полю врага: запрашивает у пользователя результат выстрела (мимо, попал, убил) и отмечает его на карте
+// Обрабатывает выстрел игрока по полю врага: запрашивает у пользователя результат выстрела и отмечает его на карте
 void handle_enemy_board_shot(Game& game, int x, int y, int& msg_type) {
     char& cell = game.current.enemy_table[x][y];
     if (cell != '.') {
@@ -371,11 +367,12 @@ int check_game_over(const GameState& state) {
 
 // Запуск, галвная функция: настраивает консоль, инициализирует игровые поля, расставляет корабли и запускает основной игровой цикл
 int main() {
+    // поддержва кирилицы
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
     srand(time(NULL));
 
-    // Включаем обработку ANSI escape-последовательностей в Windows 10+
+    // включает цветной текст и управление курсором в консоли
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     DWORD dwMode = 0;
     if (GetConsoleMode(hOut, &dwMode)) {
@@ -383,7 +380,7 @@ int main() {
         SetConsoleMode(hOut, dwMode);
     }
 
-    MoveWindow(GetConsoleWindow(), 1350, 300, 600, 700, TRUE);
+    MoveWindow(GetConsoleWindow(), 1350, 300, 600, 700, TRUE); // размеры консоли
 
     Game game;
     init_board(game.current.enemy_table);
