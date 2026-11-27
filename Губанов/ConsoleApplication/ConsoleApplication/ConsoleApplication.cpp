@@ -11,6 +11,7 @@ const int SHIP_LENGTHS[SHIP_COUNT] = { 4, 3, 3, 2, 2, 2, 1, 1, 1, 1 };
 const char RUS_LETTERS[] = "АБВГДЕЖЗИК";
 const int SYM_MAX_LEN = 20;
 
+// цветные символы для интерфейса
 char SYM_EMPTY[SYM_MAX_LEN] = "\033[94m.\033[0m"; // Синий
 char SYM_SHIP[SYM_MAX_LEN] = "\033[93m#\033[0m"; // Желтый
 char SYM_HIT[SYM_MAX_LEN] = "\033[91mX\033[0m"; // Красный
