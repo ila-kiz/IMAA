@@ -1,4 +1,4 @@
-﻿SIZE
+﻿
 
 
 
@@ -25,18 +25,6 @@ const char stolby[10] = { 'А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ж', 'З', 'И', 
 /* Стандартный флот: максимум кораблей каждого размера (индекс = размер) */
 const int limitFlota[5] = { 0, 4, 3, 2, 1 };
 
-/* Условные обозначения */
-void oboznachenia(void)
-{
-    printf("\n--- УСЛОВНЫЕ ОБОЗНАЧЕНИЯ ---\n");
-    printf("O  — корабль\n");
-    printf("#  — промах\n");
-    printf("X  — попадание\n");
-    printf("%%  — подбитая клетка (уже поражена)\n");
-    printf(".  — неизвестная/пустая клетка\n");
-    printf("Столбцы — А..К (без Й), строки — 1..10\n");
-    printf("----------------------------\n\n");
-}
 
 /* Инициализация полей */
 void simvoly(void)
@@ -177,12 +165,13 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
     char hO[10];
     set_color(15);
     printf("\n--- УСЛОВНЫЕ ОБОЗНАЧЕНИЯ ---\n");
-    set_color(9);
+    set_color(10);
     printf("O  — корабль\n");
     printf("#  — промах\n");
     printf("X  — попадание\n");
     printf("%%  — подбитая клетка (уже поражена)\n");
     printf(".  — неизвестная/пустая клетка\n");
+    set_color(11);
     printf("Столбцы — А..К (без Й), строки — 1..10\n");
     printf("\n%s: введите строку (1-10), столбец (А-К), размер (1-4) и ориентацию.\n", kto);
     printf("Пример: 5 Б 3 H  (корабль из 3 клеток горизонтально от Б5)\n");
@@ -192,6 +181,7 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
     printf("Закончить расстановку: 0 0 0 X\n");
     printf("Флот: 4-палубных - 1, 3-палубных - 2, 2-палубных - 3, 1-палубных - 4\n");
     printf("----------------------------\n\n");
+    set_color(15);
     while (1)
     {
         printf("Ввод: ");
@@ -244,7 +234,7 @@ void razmestit(char pole[SIZE1][SIZE1], const char* kto, int* vsego)
         b = perevodStolbca(bChar);
         if (b == -1) { printf("Ошибка: столбец должен быть от А до К.\n"); continue; }
 
-        if (a < 1 || a > SIZE - 2 || b < 1 || b > SIZE - 2)
+        if (a < 1 || a > SIZE1 - 2 || b < 1 || b > SIZE1 - 2)
         {
             printf("Ошибка: строка 1-10, столбец А-К.\n");
             continue;
@@ -320,7 +310,7 @@ void vashVystrel(void)
         b = perevodStolbca(bChar);
         if (b == -1) { printf("Ошибка: столбец должен быть от А до К.\n"); continue; }
 
-        if (a >= 1 && a <= SIZE - 2 && b >= 1 && b <= SIZE - 2)
+        if (a >= 1 && a <= SIZE1 - 2 && b >= 1 && b <= SIZE1 - 2)
         {
             if (m[a][b] != '.') { printf("Здесь уже стреляли! Введите другую клетку.\n"); continue; }
 
@@ -347,8 +337,8 @@ void hodProtivnika(void)
     int a, b;
     do
     {
-        a = rand() % (SIZE - 2) + 1;   /* 1–10 */
-        b = rand() % (SIZE - 2) + 1;   /* 1–10 */
+        a = rand() % (SIZE1 - 2) + 1;   /* 1–10 */
+        b = rand() % (SIZE1 - 2) + 1;   /* 1–10 */
     } while (t[a][b] == '#' || t[a][b] == '%' || t[a][b] == 'X');
 
     if (t[a][b] == 'O')
@@ -370,7 +360,6 @@ int main(void)
     setlocale(LC_ALL, "Russian");   /* кириллица в консоли */
 
     simvoly();
-    oboznachenia();
     vyvod(0);
 
     razmestit(t, "Ваши корабли", &myShips);
